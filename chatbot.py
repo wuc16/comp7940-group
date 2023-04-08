@@ -1,13 +1,14 @@
-# lab4 chatbot
+# final project chatbot
 import openai
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 import configparser
 import os
 import logging
-import redis
+import pyrebase4
 
 global redis1
+global firebase
 
 
 def main():
@@ -20,6 +21,17 @@ def main():
 
     dispatcher = updater.dispatcher
     openai.api_key = config['OPENAI']['API']
+    global firebase
+    firebase_config = {
+        'apiKey': config['firebaseConfig']['apiKey'],
+        'authDomain': config['firebaseConfig']['authDomain'],
+        'projectId': config['firebaseConfig']['projectId'],
+        'storageBucket': config['firebaseConfig']['storageBucket'],
+        'messagingSenderId': config['firebaseConfig']['messagingSenderId'],
+        'appId': config['firebaseConfig']['appId']
+    }
+
+    firebase = pyrebase.initialize_app(firebase_config)
     # global redis1
     # redis1 = redis.Redis(host=(os.environ['HOST']), password=(os.environ['PASSWORD']), port=(os.environ['REDISPORT']))
     # updater = Updater(token=(os.environ['ACCESS_TOKEN_W']), use_context=True)
@@ -53,7 +65,8 @@ def echo(update, context):
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('"/add"\tadd a string to count\n"/hello"\tgreeting message\n"/chat"\tChatGPT')
+    update.message.reply_text('"/add"\tadd a string to count\n"/hello"\tgreeting message'
+                              '\n"/chat"\tChatGPT\n/rec\trandom photos\n/cook\tcooking video')
 
 
 def add(update: Update, context: CallbackContext) -> None:
@@ -71,7 +84,6 @@ def add(update: Update, context: CallbackContext) -> None:
 def hello(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /hello is issued."""
     try:
-        global redis1
         logging.info(context.args[0])
         msg = context.args[0]  # /hello keyword <-- this should store the keyword
         update.message.reply_text('Good Day, ' + msg + "!")
