@@ -5,7 +5,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 import configparser
 import os
 import logging
-import pyrebase
+
 
 global redis1
 # global firebase
