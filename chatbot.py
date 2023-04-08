@@ -5,10 +5,10 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 import configparser
 import os
 import logging
-import pyrebase4
+import pyrebase
 
 global redis1
-global firebase
+# global firebase
 
 
 def main():
@@ -21,17 +21,17 @@ def main():
 
     dispatcher = updater.dispatcher
     openai.api_key = config['OPENAI']['API']
-    global firebase
-    firebase_config = {
-        'apiKey': config['firebaseConfig']['apiKey'],
-        'authDomain': config['firebaseConfig']['authDomain'],
-        'projectId': config['firebaseConfig']['projectId'],
-        'storageBucket': config['firebaseConfig']['storageBucket'],
-        'messagingSenderId': config['firebaseConfig']['messagingSenderId'],
-        'appId': config['firebaseConfig']['appId']
-    }
-
-    firebase = pyrebase.initialize_app(firebase_config)
+    # global firebase
+    # firebase_config = {
+    #     'apiKey': config['firebaseConfig']['apiKey'],
+    #     'authDomain': config['firebaseConfig']['authDomain'],
+    #     'projectId': config['firebaseConfig']['projectId'],
+    #     'storageBucket': config['firebaseConfig']['storageBucket'],
+    #     'messagingSenderId': config['firebaseConfig']['messagingSenderId'],
+    #     'appId': config['firebaseConfig']['appId']
+    # }
+    #
+    # firebase = pyrebase.initialize_app(firebase_config)
     # global redis1
     # redis1 = redis.Redis(host=(os.environ['HOST']), password=(os.environ['PASSWORD']), port=(os.environ['REDISPORT']))
     # updater = Updater(token=(os.environ['ACCESS_TOKEN_W']), use_context=True)
