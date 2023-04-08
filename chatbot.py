@@ -96,7 +96,7 @@ def rec(update: Update, context: CallbackContext) -> None:
             msg = msg + str + " "
         update.message.reply_text(generate_text(msg))
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /rec')
+        update.message.reply_text('Usage: /rec <location>')
 
 
 def cook(update: Update, context: CallbackContext) -> None:
