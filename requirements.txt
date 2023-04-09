@@ -3,3 +3,5 @@ configparser
 python-telegram-bot==13.7
 redis
 openai
+
+firebase_admin

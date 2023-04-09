@@ -5,10 +5,12 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 import configparser
 import os
 import logging
-
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
 
 global redis1
-# global firebase
+global firebase
 
 
 def main():
@@ -17,21 +19,19 @@ def main():
     config = configparser.ConfigParser()
     config.read('config.ini')
 
+    # link to telegram chatbot
     updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
 
-    dispatcher = updater.dispatcher
+    # link to chatGPT
     openai.api_key = config['OPENAI']['API']
-    # global firebase
-    # firebase_config = {
-    #     'apiKey': config['firebaseConfig']['apiKey'],
-    #     'authDomain': config['firebaseConfig']['authDomain'],
-    #     'projectId': config['firebaseConfig']['projectId'],
-    #     'storageBucket': config['firebaseConfig']['storageBucket'],
-    #     'messagingSenderId': config['firebaseConfig']['messagingSenderId'],
-    #     'appId': config['firebaseConfig']['appId']
-    # }
-    #
-    # firebase = pyrebase.initialize_app(firebase_config)
+
+    # link to firebase
+    cred = credentials.Certificate("./serviceAccount.json")
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': config['FIREBASE']['DATABASE_URL']
+    })
+
+    dispatcher = updater.dispatcher
     # global redis1
     # redis1 = redis.Redis(host=(os.environ['HOST']), password=(os.environ['PASSWORD']), port=(os.environ['REDISPORT']))
     # updater = Updater(token=(os.environ['ACCESS_TOKEN_W']), use_context=True)
@@ -66,7 +66,7 @@ def echo(update, context):
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('"/add"\tadd a string to count\n"/hello"\tgreeting message'
-                              '\n"/chat"\tChatGPT\n/rec\trandom photos\n/cook\tcooking video')
+                              '\n"/chat"\tChatGPT\n"/rec"\tintroducing cities\n"/cook"\tcooking video')
 
 
 def add(update: Update, context: CallbackContext) -> None:
@@ -106,9 +106,12 @@ def rec(update: Update, context: CallbackContext) -> None:
         msg = ""
         for str in context.args:
             msg = msg + str + " "
-        update.message.reply_text(generate_text(msg))
+        ref = db.reference(msg[0:-1])
+        data = ref.get()
+        update.message.reply_text(data['description'])
+        update.message.reply_text(data['url'])
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /rec <location>')
+        update.message.reply_text('Usage: /rec <city>')
 
 
 def cook(update: Update, context: CallbackContext) -> None:
