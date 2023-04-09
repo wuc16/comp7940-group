@@ -43,7 +43,6 @@ def main():
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     updater.dispatcher.add_handler(echo_handler)
     # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("add", add))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("hello", hello))
     dispatcher.add_handler(CommandHandler("chat", chat))
@@ -66,20 +65,8 @@ def echo(update, context):
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('"/add"\tadd a string to count\n"/hello"\tgreeting message'
-                              '\n"/chat"\tChatGPT\n"/rec"\tintroducing cities\n"/cook"\trandom cooking videos')
-
-
-def add(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /add is issued."""
-    try:
-        global redis1
-        logging.info(context.args[0])
-        msg = context.args[0]  # /add keyword <-- this should store the keyword
-        redis1.incr(msg)
-        update.message.reply_text('You have said ' + msg + ' for ' + redis1.get(msg).decode('UTF-8') + ' times.')
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /add <keyword>')
+    update.message.reply_text('"/hello"\tgreeting message''\n"/chat"\tChatGPT\n'
+                              '"/rec"\tintroducing cities\n"/cook"\trandom cooking videos')
 
 
 def hello(update: Update, context: CallbackContext) -> None:
