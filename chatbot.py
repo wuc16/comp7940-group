@@ -8,6 +8,7 @@ import logging
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+import random
 
 global redis1
 global firebase
@@ -66,7 +67,7 @@ def echo(update, context):
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('"/add"\tadd a string to count\n"/hello"\tgreeting message'
-                              '\n"/chat"\tChatGPT\n"/rec"\tintroducing cities\n"/cook"\tcooking video')
+                              '\n"/chat"\tChatGPT\n"/rec"\tintroducing cities\n"/cook"\trandom cooking videos')
 
 
 def add(update: Update, context: CallbackContext) -> None:
@@ -106,22 +107,24 @@ def rec(update: Update, context: CallbackContext) -> None:
         msg = ""
         for str in context.args:
             msg = msg + str + " "
-        ref = db.reference(msg[0:-1])
+        ref = db.reference('cities/' + msg[0:-1])
         data = ref.get()
-        update.message.reply_text(data['description'])
-        update.message.reply_text(data['url'])
+        if data:
+            update.message.reply_text(data['description'] + " You can find more information in the following link. ")
+            update.message.reply_text(data['url'])
+        else:
+            update.message.reply_text('The city is not in the database, try /chat for the details of this city.')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /rec <city>')
 
 
 def cook(update: Update, context: CallbackContext) -> None:
     try:
-        msg = ""
-        for str in context.args:
-            msg = msg + str + " "
-        update.message.reply_text(generate_text(msg))
+        ref = db.reference('video/')
+        data = ref.get()
+        update.message.reply_text('https://www.youtube.com/watch?v=' + data[random.randint(0, 2)])
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /chat <sentence>')
+        update.message.reply_text('Usage: /cook')
 
 
 def generate_text(prompt):
