@@ -10,9 +10,6 @@ from firebase_admin import credentials
 from firebase_admin import db
 import random
 
-global redis1
-global firebase
-
 
 def main():
     # Load your token and create an Updater for your Bot
