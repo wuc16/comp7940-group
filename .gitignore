@@ -1,4 +1,4 @@
 *.ini
-*.json
+gcp_serviceAccount.json
 test.py
 
