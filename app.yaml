@@ -1,0 +1,18 @@
+version: '3'
+services:
+  chatbot:
+    image: comp7940final
+    # missing instructions for setting environment variable
+    # missing instructions for setting the entrypoint and/or command
+    environment:
+      ACCESS_TOKEN: 6256944174:AAExNSezeuLiNzNsSPnyZo6RffDzGsoVLa4
+      OPENAI_API: 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
+      FIREBASE: https://comp7940-group-default-rtdb.firebaseio.com/
+    entrypoint: python chatbot.py
+    depends_on:
+#      - redis
+#  redis:
+#    image: redis
+#    volumes:
+#      - ./redis.conf:/usr/local/etc/redis/redis.conf
+#    command: ["/usr/local/etc/redis/redis.conf"]
