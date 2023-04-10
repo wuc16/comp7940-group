@@ -18,15 +18,17 @@ def main():
     config.read('config.ini')
 
     # link to telegram chatbot
-    updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
+    # updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
+    updater = Updater(token=(os.environ['ACCESS_TOKEN']))
 
     # link to chatGPT
-    openai.api_key = config['OPENAI']['API']
+    # openai.api_key = config['OPENAI']['API']
+    openai.api_key = os.environ['OPENAI_API']
 
     # link to firebase
     cred = credentials.Certificate("./serviceAccount.json")
     firebase_admin.initialize_app(cred, {
-        'databaseURL': config['FIREBASE']['DATABASE_URL']
+        'databaseURL': os.environ['FIREBASE']
     })
 
     dispatcher = updater.dispatcher
@@ -78,6 +80,7 @@ def hello(update: Update, context: CallbackContext) -> None:
 
 def chat(update: Update, context: CallbackContext) -> None:
     try:
+        test = context.args[0]
         msg = ""
         for str in context.args:
             msg = msg + str + " "
@@ -88,6 +91,7 @@ def chat(update: Update, context: CallbackContext) -> None:
 
 def rec(update: Update, context: CallbackContext) -> None:
     try:
+        test = context.args[0]
         msg = ""
         for str in context.args:
             msg = msg + str + " "

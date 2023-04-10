@@ -6,7 +6,7 @@ services:
     # missing instructions for setting the entrypoint and/or command
     environment:
       ACCESS_TOKEN: 6256944174:AAExNSezeuLiNzNsSPnyZo6RffDzGsoVLa4
-      OPENAI_API: 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
+      OPENAI_API: 122
       FIREBASE: https://comp7940-group-default-rtdb.firebaseio.com/
     entrypoint: python chatbot.py
     depends_on:
