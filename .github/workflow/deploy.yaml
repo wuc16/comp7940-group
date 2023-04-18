@@ -1,0 +1,21 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: linux-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+
+      - name: Copy files to EC2
+        run: |
+          scp -r -i ${{ secrets.SSH_PRIVATE_KEY }} \ ./ ec2-user@ec2-3-27-75-62.ap-southeast-2.compute.amazonaws.com:/comp7940final

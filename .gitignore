@@ -1,4 +1,7 @@
 *.ini
 gcp_serviceAccount.json
+.gitignore
 test.py
-
+*.pem
+Dockerfile
+app.yaml

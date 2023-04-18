@@ -6,13 +6,6 @@ services:
     # missing instructions for setting the entrypoint and/or command
     environment:
       ACCESS_TOKEN: 6256944174:AAExNSezeuLiNzNsSPnyZo6RffDzGsoVLa4
-      OPENAI_API: 122
+      OPENAI_API: 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
       FIREBASE: https://comp7940-group-default-rtdb.firebaseio.com/
     entrypoint: python chatbot.py
-    depends_on:
-#      - redis
-#  redis:
-#    image: redis
-#    volumes:
-#      - ./redis.conf:/usr/local/etc/redis/redis.conf
-#    command: ["/usr/local/etc/redis/redis.conf"]
